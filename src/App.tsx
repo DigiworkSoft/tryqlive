@@ -1413,21 +1413,26 @@ export default function App() {
       </footer>
 
       {/* Floating Action Button for Mobile */}
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 2, duration: 0.5 }}
-        className="fixed bottom-28 right-6 z-[9999] md:hidden"
-      >
-        <motion.button
-          onClick={openModal}
-          whileTap={{ scale: 0.95 }}
-          className="h-12 px-6 bg-gradient-to-r from-[#D4AF37] via-[#F3D17B] to-[#D4AF37] rounded-full shadow-[0_10px_30px_rgba(212,175,55,0.6)] flex items-center justify-center gap-2 text-black font-black text-xs tracking-tighter animate-gold-pulse active:shadow-none border border-white/20 whitespace-nowrap"
-        >
-          <Calendar size={16} />
-          RESERVE SEAT
-        </motion.button>
-      </motion.div>
+      <AnimatePresence>
+        {!isModalOpen && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="fixed bottom-28 right-6 z-[9999] md:hidden"
+          >
+            <motion.button
+              onClick={openModal}
+              whileTap={{ scale: 0.95 }}
+              className="h-12 px-6 bg-gradient-to-r from-[#D4AF37] via-[#F3D17B] to-[#D4AF37] rounded-full shadow-[0_10px_30px_rgba(212,175,55,0.6)] flex items-center justify-center gap-2 text-black font-black text-xs tracking-tighter animate-gold-pulse active:shadow-none border border-white/20 whitespace-nowrap"
+            >
+              <Calendar size={16} />
+              RESERVE SEAT
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <RegistrationModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
