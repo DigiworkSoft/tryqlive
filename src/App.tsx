@@ -61,8 +61,8 @@ const PulseButton = ({ children, className = "", variant = "gold", shimmer = fal
   );
 
   const baseClasses = `font-bold py-4 px-8 rounded-full text-sm uppercase tracking-widest transition-transform flex items-center justify-center text-center relative overflow-hidden ${variant === "gold"
-      ? "bg-[#D4AF37] text-black animate-gold-pulse"
-      : "bg-green-600 text-white animate-green-pulse shadow-lg"
+    ? "bg-[#D4AF37] text-black animate-gold-pulse"
+    : "bg-green-600 text-white animate-green-pulse shadow-lg"
     } ${className}`;
 
   if (isLive) {
@@ -674,10 +674,10 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     e.preventDefault();
     if (validate()) {
       setIsSubmitting(true);
-      
+
       // Send data to Google Sheets via Apps Script
       const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || '';
-      
+
       fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -728,7 +728,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
             {isSuccess ? (
               <div className="text-center py-4">
-                <motion.div 
+                <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-yellow-500/20"
@@ -746,7 +746,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                   <h4 className="text-zinc-200 text-sm leading-relaxed mb-8">
                     For further updates, you <span className="text-white font-bold underline">must join</span> our official WhatsApp community below.
                   </h4>
-                  
+
                   <a
                     href={import.meta.env.VITE_WHATSAPP_URL || "https://chat.whatsapp.com/your-community-link"}
                     target="_blank"
@@ -756,7 +756,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                     <Users size={20} />
                     Join the Community
                   </a>
-                  
+
                   <p className="text-zinc-500 text-[9px] mt-6 uppercase font-bold tracking-widest opacity-60">
                     Registration will expire in 5 minutes if not joined
                   </p>
@@ -1393,20 +1393,16 @@ export default function App() {
 
       <footer className="px-6 py-16 border-t border-zinc-900 text-center text-zinc-600 text-sm">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
-          <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center p-2 border border-zinc-800">
+          <div className="w-20 h-20 bg-white/5 rounded-xl flex items-center justify-center p-3 border border-zinc-800">
             <img
-              src="/logo.png"
+              src={logo}
               alt="TRYQ Logo"
               className="w-full h-full object-contain opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
               referrerPolicy="no-referrer"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.parentElement!.innerHTML = '<span class="font-black text-zinc-700 text-xl italic tracking-tighter">TQ</span>';
-              }}
             />
           </div>
           <div>
-            <p>&copy; 2026 TRYQ Masterclass Pune. All Rights Reserved.</p>
+            <p>&copy; 2026 TRYQ Creative School. All Rights Reserved.</p>
             <p className="mt-2 flex items-center justify-center gap-4 text-xs">
               <a href="#" className="hover:text-white transition-colors">Terms</a>
               <a href="#" className="hover:text-white transition-colors">Privacy</a>
