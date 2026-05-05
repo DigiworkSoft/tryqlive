@@ -741,7 +741,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 </p>
 
                 <div className="bg-zinc-900/80 border border-zinc-800 p-8 rounded-3xl relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                   <p className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.3em] mb-4">Mandatory Step</p>
                   <h4 className="text-zinc-200 text-sm leading-relaxed mb-8">
                     For further updates, you <span className="text-white font-bold underline">must join</span> our official WhatsApp community below.
@@ -751,7 +751,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                     href={import.meta.env.VITE_WHATSAPP_URL || "https://chat.whatsapp.com/your-community-link"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 bg-[#25D366] text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(37,211,102,0.3)] group"
+                    className="relative z-10 inline-flex items-center gap-3 bg-[#25D366] text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_20px_40px_rgba(37,211,102,0.3)] group"
                   >
                     <Users size={20} />
                     Join the Community
