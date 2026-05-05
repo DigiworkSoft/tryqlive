@@ -606,6 +606,22 @@ const FreelancerSVG = () => {
   );
 };
 
+const INDIA_STATES = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana",
+  "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+  "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+  "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", "Ladakh", "Lakshadweep", "Puducherry"
+];
+
+const STATE_CITIES: Record<string, string[]> = {
+  "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Kalyan-Dombivli", "Vasai-Virar", "Aurangabad", "Navi Mumbai", "Solapur", "Mira-Bhayandar", "Bhiwandi", "Amravati", "Nanded", "Kolhapur", "Akola", "Panvel", "Ulhasnagar", "Sangli-Miraj & Kupwad", "Malegaon", "Jalgaon", "Latur", "Dhule", "Ahmednagar", "Chandrapur", "Parbhani", "Ichalkaranji", "Jalna", "Ambarnath", "Bhusawal", "Ratnagiri", "Beed"],
+  "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar", "Junagadh", "Gandhidham", "Anand"],
+  "Karnataka": ["Bengaluru", "Mysore", "Hubli-Dharwad", "Mangaluru", "Belagavi", "Davangere", "Ballari", "Vijayapura", "Shivamogga", "Tumakuru"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Tiruppur", "Ranipet", "Nagercoil", "Thanjavur"],
+  "Delhi": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi"],
+};
+
 const LiveVisitorCount = () => {
   const [count, setCount] = useState(Math.floor(Math.random() * (65 - 35 + 1)) + 35);
 
@@ -642,13 +658,13 @@ const LiveVisitorCount = () => {
 };
 
 const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const [formData, setFormData] = useState({ name: '', mobile: '', email: '', questions: '' });
-  const [errors, setErrors] = useState({ name: '', mobile: '', email: '' });
+  const [formData, setFormData] = useState({ name: '', mobile: '', email: '', state: '', city: '', status: '', qualification: '' });
+  const [errors, setErrors] = useState({ name: '', mobile: '', email: '', state: '', city: '', status: '', qualification: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const validate = () => {
-    let newErrors = { name: '', mobile: '', email: '' };
+    let newErrors = { name: '', mobile: '', email: '', state: '', city: '', status: '', qualification: '' };
     let isValid = true;
 
     if (!formData.name.trim()) {
@@ -663,6 +679,26 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Enter a valid email address';
+      isValid = false;
+    }
+
+    if (!formData.state) {
+      newErrors.state = 'State is required';
+      isValid = false;
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = 'City is required';
+      isValid = false;
+    }
+
+    if (!formData.status) {
+      newErrors.status = 'Status is required';
+      isValid = false;
+    }
+
+    if (!formData.qualification) {
+      newErrors.qualification = 'Qualification is required';
       isValid = false;
     }
 
@@ -693,7 +729,7 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           const existing = JSON.parse(localStorage.getItem('tryq_registrations') || '[]');
           localStorage.setItem('tryq_registrations', JSON.stringify([
             ...existing,
-            { ...formData, timestamp: new Date().toISOString(), status: 'pending_whatsapp' }
+            { ...formData, timestamp: new Date().toISOString() }
           ]));
         })
         .finally(() => {
@@ -810,14 +846,90 @@ const RegistrationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-2">Any Questions? (Optional)</label>
-                    <textarea
-                      value={formData.questions}
-                      onChange={(e) => setFormData({ ...formData, questions: e.target.value })}
-                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37]/50 transition-colors h-24 resize-none"
-                      placeholder="Ask us anything..."
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-2">State</label>
+                      <div className="relative">
+                        <select
+                          value={formData.state}
+                          onChange={(e) => setFormData({ ...formData, state: e.target.value, city: '' })}
+                          className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37]/50 transition-colors appearance-none"
+                          required
+                        >
+                          <option value="" disabled>Select State</option>
+                          {INDIA_STATES.map(state => <option key={state} value={state}>{state}</option>)}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" size={16} />
+                      </div>
+                      {errors.state && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.state}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-2">City</label>
+                      <input
+                        type="text"
+                        list="cities"
+                        value={formData.city}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                        className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37]/50 transition-colors"
+                        placeholder="Select or type city"
+                        required
+                      />
+                      <datalist id="cities">
+                        {formData.state && STATE_CITIES[formData.state] && STATE_CITIES[formData.state].map(city => (
+                          <option key={city} value={city} />
+                        ))}
+                      </datalist>
+                      {errors.city && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.city}</p>}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-2">Current Status</label>
+                      <div className="relative">
+                        <select
+                          value={formData.status}
+                          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                          className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37]/50 transition-colors appearance-none"
+                          required
+                        >
+                          <option value="" disabled>Select Status</option>
+                          <option value="Student">Student</option>
+                          <option value="Employed">Employed</option>
+                          <option value="Self-Employed">Self-Employed</option>
+                          <option value="Seeking Employment">Seeking Employment</option>
+                          <option value="Intern">Intern</option>
+                          <option value="Freelancer">Freelancer</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" size={16} />
+                      </div>
+                      {errors.status && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.status}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-2">Select Qualification</label>
+                      <div className="relative">
+                        <select
+                          value={formData.qualification}
+                          onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
+                          className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#D4AF37]/50 transition-colors appearance-none"
+                          required
+                        >
+                          <option value="" disabled>Select Qualification</option>
+                          <option value="10th Pass">10th Pass</option>
+                          <option value="12th Pass">12th Pass</option>
+                          <option value="Diploma">Diploma</option>
+                          <option value="Undergraduate (Pursuing)">Undergraduate (Pursuing)</option>
+                          <option value="Undergraduate (Completed)">Undergraduate (Completed)</option>
+                          <option value="Postgraduate (Pursuing)">Postgraduate (Pursuing)</option>
+                          <option value="Postgraduate (Completed)">Postgraduate (Completed)</option>
+                          <option value="Doctorate (PhD)">Doctorate (PhD)</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" size={16} />
+                      </div>
+                      {errors.qualification && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.qualification}</p>}
+                    </div>
                   </div>
 
                   <button
